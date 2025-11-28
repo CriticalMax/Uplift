@@ -18,6 +18,9 @@
 		"main": [
 			"com.slyfa.uplift.Uplift"
 		],
+		"client": [
+			"com.slyfa.uplift.client.UpliftClient"
+		],
 		"fabric-datagen": [
 			"com.slyfa.uplift.UpliftDataGenerator"
 		]

@@ -17,6 +17,6 @@ Right now, it will use one rocket (from anywhere in the players inventory) when 
 
 
 ### Settings
-In the controls you can set the Flightmode_Toggle to any key you wish. Default: U+T
+In the controls you can set the Flightmode_Toggle to any key you wish.
 
-> The default key for toggling the flight mode is `U+T`.
+> The default key for toggling the flight mode is `C`.

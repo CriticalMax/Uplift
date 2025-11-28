@@ -1,5 +1,6 @@
 package com.slyfa.uplift.mixin;
 
+import com.slyfa.uplift.client.UpliftClient;
 import com.slyfa.uplift.enchantment.ModEnchantments;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
@@ -38,6 +39,24 @@ public class PlayerEntityMixin {
                 .anyMatch(entry -> entry.matchesKey(ModEnchantments.UPLIFT));
             
             if (hasUplift) {
+                // Check if Uplift mode is enabled (only on client side)
+                boolean upliftModeEnabled = player.getEntityWorld().isClient() ? UpliftClient.isUpliftModeEnabled() : true;
+                
+                if (!upliftModeEnabled) {
+                    // Uplift mode disabled, remove flight and return
+                    if (player.getAbilities().allowFlying && !player.getAbilities().flying) {
+                        player.getAbilities().allowFlying = false;
+                        player.sendAbilitiesUpdate();
+                    } else if (player.getAbilities().flying) {
+                        player.getAbilities().allowFlying = false;
+                        player.getAbilities().flying = false;
+                        player.sendAbilitiesUpdate();
+                    }
+                    uplift$wasFlying = false;
+                    uplift$flightTicks = 0;
+                    return;
+                }
+                
                 // Check if player has at least one rocket in inventory
                 boolean hasRocket = player.getInventory().containsAny(stack -> 
                     stack.isOf(Items.FIREWORK_ROCKET));

@@ -1,3 +1,5 @@
 {
-  "enchantment.uplift.uplift": "Uplift"
+  "enchantment.uplift.uplift": "Uplift",
+  "key.uplift.toggle_flight_mode": "Toggle Uplift Flight Mode",
+  "key.category.uplift.keybindings": "Uplift"
 }
