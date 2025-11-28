@@ -132,6 +132,47 @@ public class PlayerEntityMixin {
                 player.sendAbilitiesUpdate();
             }
         }
+        
+        // Aggressively disable sprinting when flying with Uplift
+        if (player.isSprinting() && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+            ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST);
+            if (chest.isOf(Items.ELYTRA)) {
+                boolean hasUplift = EnchantmentHelper.getEnchantments(chest)
+                    .getEnchantments()
+                    .stream()
+                    .anyMatch(entry -> entry.matchesKey(ModEnchantments.UPLIFT));
+                
+                if (hasUplift) {
+                    boolean upliftModeEnabled = player.getEntityWorld().isClient() ? UpliftClient.isUpliftModeEnabled() : true;
+                    if (upliftModeEnabled) {
+                        player.setSprinting(false);
+                    }
+                }
+            }
+        }
+    }
+    
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void disableSprintAtEndOfTick(CallbackInfo ci) {
+        PlayerEntity player = (PlayerEntity) (Object) this;
+        
+        // Force disable sprinting at end of tick when flying with Uplift
+        if (player.isSprinting() && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+            ItemStack chest = player.getEquippedStack(EquipmentSlot.CHEST);
+            if (chest.isOf(Items.ELYTRA)) {
+                boolean hasUplift = EnchantmentHelper.getEnchantments(chest)
+                    .getEnchantments()
+                    .stream()
+                    .anyMatch(entry -> entry.matchesKey(ModEnchantments.UPLIFT));
+                
+                if (hasUplift) {
+                    boolean upliftModeEnabled = player.getEntityWorld().isClient() ? UpliftClient.isUpliftModeEnabled() : true;
+                    if (upliftModeEnabled) {
+                        player.setSprinting(false);
+                    }
+                }
+            }
+        }
     }
     
     @Unique
