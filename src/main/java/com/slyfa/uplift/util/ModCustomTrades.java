@@ -22,16 +22,30 @@ import java.util.Optional;
 
 public class ModCustomTrades {
     public static void registerCustomTrades() {
+        Uplift.LOGGER.info("Registering Uplift villager trades...");
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.LIBRARIAN, 1, factories -> {
+            Uplift.LOGGER.info("Adding Uplift trade factory to Librarian level 1");
             factories.add((entity, random) -> {
+                Uplift.LOGGER.info("Trade factory called for entity: {}", entity.getClass().getSimpleName());
                 try {
-                    // Use reflection to access the protected world field
-                    java.lang.reflect.Field worldField = net.minecraft.entity.Entity.class.getDeclaredField("world");
-                    worldField.setAccessible(true);
-                    World world = (World) worldField.get(entity);
+                    // Get the world from entity - villager entities have getEntityWorld()
+                    if (!(entity instanceof net.minecraft.entity.passive.VillagerEntity villager)) {
+                        Uplift.LOGGER.warn("Entity is not a villager!");
+                        return null;
+                    }
+                    
+                    World world = villager.getEntityWorld();
+                    
+                    Uplift.LOGGER.info("World type: {}, isClient: {}", world.getClass().getSimpleName(), world.isClient());
                     
                     // Only proceed if we're on the server
+                    if (world.isClient()) {
+                        Uplift.LOGGER.info("Client world detected, returning null");
+                        return null;
+                    }
+                    
                     if (!(world instanceof ServerWorld serverWorld)) {
+                        Uplift.LOGGER.info("Not a server world, returning null");
                         return null;
                     }
                     
@@ -45,16 +59,18 @@ public class ModCustomTrades {
                         enchantmentRegistry.getEntry(upliftId);
                     
                     if (upliftEntry.isPresent()) {
+                        Uplift.LOGGER.info("Uplift enchantment found, creating trade offer");
                         // Create the enchanted book
                         ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
                         
-                        // Add the enchantment using the component system
+                        // Add the enchantment
                         ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(
                             ItemEnchantmentsComponent.DEFAULT
                         );
                         builder.add(upliftEntry.get(), 1);
                         enchantedBook.set(DataComponentTypes.STORED_ENCHANTMENTS, builder.build());
                         
+                        Uplift.LOGGER.info("Created Uplift enchanted book trade successfully");
                         // Create the trade offer
                         return new TradeOffer(
                             new TradedItem(Items.EMERALD, 22),
@@ -64,6 +80,8 @@ public class ModCustomTrades {
                             30, // Villager XP
                             0.2f // Price multiplier
                         );
+                    } else {
+                        Uplift.LOGGER.warn("Uplift enchantment not found in registry!");
                     }
                 } catch (Exception e) {
                     Uplift.LOGGER.error("Error creating Uplift enchanted book trade", e);
@@ -71,5 +89,6 @@ public class ModCustomTrades {
                 return null;
             });
         });
+        Uplift.LOGGER.info("Uplift villager trades registered");
     }    
 }
