@@ -32,5 +32,6 @@ In the controls you can set the "Toggle Uplift Flight Mode" setting to any key y
 - [ ] Disable upliftFlightMode on init
 - [ ] Activate elytra when upflight mode gets deactivated and player in air 
 - [ ] Calculate rocket usage based on distance AND time
-- [ ] Don't reset timer on land so last "charge" can be used fully
-- [ ] Randomize VillagerTradePrice by a small amount
+- [ ] Don't reset timer on land so last charge can be used fully
+- [ ] Randomize villagerTradePrice by a small amount
+- [ ] Replace bookTrade instead of replacing paper or bookshelf
