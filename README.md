@@ -1,3 +1,5 @@
+![Uplift](src/main/resources/assets/uplift/uplift_banner.jpg)
+
 # 🛩️ About
 
 **Uplift** is a **Fabric 1.21+** mod.
