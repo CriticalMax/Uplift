@@ -3,15 +3,15 @@
 	"id": "uplift",
 	"version": "${version}",
 	"name": "Uplift",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Adds creative flying to survival mode using an enchantment on elytra.",
 	"authors": [
-		"Me!"
+		"Slyfa"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/CriticalMax/Uplift",
+		"sources": "https://github.com/CriticalMax/Uplift"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/uplift/icon.png",
 	"environment": "*",
 	"entrypoints": {
