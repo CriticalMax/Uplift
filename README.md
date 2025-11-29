@@ -25,7 +25,7 @@ In the controls you can set the "Toggle Uplift Flight Mode" setting to any key y
 
 
 ### In Progress
-- [x] Remove sprint from upflight
+- [x] Remove sprint from uplift flight mode
 - [ ] Calculate rocket usage based on distance AND time
 - [ ] Don't reset timer on land so last "charge" can be used fully
 - [ ] Randomize VillagerTradePrice by a small amount
