@@ -3,7 +3,9 @@
 	"package": "com.slyfa.uplift.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"EntityAccessor",
 		"LivingEntityMixin",
+		"PlayerEntityDamageMixin",
 		"PlayerEntityMixin",
 		"PlayerEntityMiningMixin",
 		"PlayerEntitySpeedMixin"

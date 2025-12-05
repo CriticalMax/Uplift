@@ -26,6 +26,11 @@ public class ModCustomTrades {
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.LIBRARIAN, 1, factories -> {
             Uplift.LOGGER.info("Adding Uplift trade factory to Librarian level 1");
             factories.add((entity, random) -> {
+                // Only 12.5% chance to offer this trade (1 in 8 librarians)
+                if (random.nextFloat() > 0.125f) {
+                    return null;
+                }
+                
                 Uplift.LOGGER.info("Trade factory called for entity: {}", entity.getClass().getSimpleName());
                 try {
                     // Get the world from entity - villager entities have getEntityWorld()
@@ -71,9 +76,13 @@ public class ModCustomTrades {
                         enchantedBook.set(DataComponentTypes.STORED_ENCHANTMENTS, builder.build());
                         
                         Uplift.LOGGER.info("Created Uplift enchanted book trade successfully");
+                        // Randomize emerald price between 14-30 with very slight upper bias
+                        // Average four random values with one being the max of two for minimal bias
+                        int emeraldCount = 14 + (random.nextInt(17) + random.nextInt(17) + random.nextInt(17) + Math.max(random.nextInt(17), random.nextInt(17))) / 4;
+                        
                         // Create the trade offer
                         return new TradeOffer(
-                            new TradedItem(Items.EMERALD, 22),
+                            new TradedItem(Items.EMERALD, emeraldCount),
                             Optional.of(new TradedItem(Items.BOOK, 1)),
                             enchantedBook,
                             4,  // Max uses

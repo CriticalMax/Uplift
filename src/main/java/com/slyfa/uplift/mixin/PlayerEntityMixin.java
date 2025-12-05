@@ -69,43 +69,50 @@ public class PlayerEntityMixin {
                     }
                 }
                 
+                // Always increment the flight timer when Uplift is enabled
+                uplift$flightTicks++;
+                
                 // Track flight state and consume rockets
                 if (player.getAbilities().flying) {
                     // Player just started flying
                     if (!uplift$wasFlying) {
                         uplift$wasFlying = true;
-                        uplift$flightTicks = 0;
-                        // Consume 1 rocket immediately
-                        boolean consumed = uplift$consumeRocket(player);
-                        if (!consumed) {
-                            // No rocket available, disable flight
-                            player.getAbilities().allowFlying = false;
-                            player.getAbilities().flying = false;
-                            player.sendAbilitiesUpdate();
-                            uplift$wasFlying = false;
-                        }
-                    } else {
-                        // Increment flight time
-                        uplift$flightTicks++;
-                        
-                        // Every 30 seconds (600 ticks), consume another rocket
-                        if (uplift$flightTicks >= 600) {
+                        // Check if timer has expired and consume rocket if needed
+                        if (uplift$flightTicks >= 400) {
                             boolean consumed = uplift$consumeRocket(player);
                             if (!consumed) {
-                                // No rocket available, disable flight
+                                // No rocket available, disable creative flight but activate elytra flight
                                 player.getAbilities().allowFlying = false;
                                 player.getAbilities().flying = false;
                                 player.sendAbilitiesUpdate();
                                 uplift$wasFlying = false;
+                                // Start elytra gliding by setting the fall flying flag
+                                ((EntityAccessor) player).invokeSetFlag(7, true);
+                                return;
                             }
                             uplift$flightTicks = 0;
                         }
+                    }
+                    
+                    // Check if timer has expired while flying
+                    if (uplift$flightTicks >= 400) {
+                        boolean consumed = uplift$consumeRocket(player);
+                        if (!consumed) {
+                            // No rocket available, disable creative flight but activate elytra flight
+                            player.getAbilities().allowFlying = false;
+                            player.getAbilities().flying = false;
+                            player.sendAbilitiesUpdate();
+                            uplift$wasFlying = false;
+                            // Start elytra gliding by setting the fall flying flag
+                            ((EntityAccessor) player).invokeSetFlag(7, true);
+                        }
+                        uplift$flightTicks = 0;
                     }
                 } else {
                     // Player stopped flying
                     if (uplift$wasFlying) {
                         uplift$wasFlying = false;
-                        uplift$flightTicks = 0;
+                        // Don't reset uplift$flightTicks - keep the timer running
                     }
                     
                     // If no rockets, disable flight ability
